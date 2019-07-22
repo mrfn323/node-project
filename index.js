@@ -5,14 +5,13 @@ const app = express();
 const port = 8765;                          //Port
 const mysql = require('mysql');
 const dbconfig = require('./dbconfig.json');
-const absPath = 'C:\\Users\\Mrfn3\\Documents\\Workspace\\nodetest\\';   //Testing Locally
-//const absPath = '/home/students/nadeems/nodetest/';                      //Testing Yoda
+const absPath = __dirname;
      
 
 //This will run on the home page
 app.get('/', function(req, res){
 
-    indexFile = absPath + "index.html";
+    indexFile = absPath + "/index.html";
     res.sendFile(indexFile);
     console.log(res.statusCode);   
 
@@ -27,7 +26,7 @@ app.get('/cat', function(req,res){
         method: 'GET',
         url: 'https://api.thecatapi.com/v1/images/search?mime_types=png',
         headers: {
-            'x-api-key': 'f513c45f-7ac7-492f-b047-5a89438c0563'
+            'x-api-key': dbconfig["api-key"]
         }
     };
 
@@ -39,7 +38,7 @@ app.get('/cat', function(req,res){
 
         console.log("//CAT PICTURE INCOMING//")
         console.log("//Original");
-        console.log(body);
+        console.log(typeof body);
         catJSON = JSON.parse(body);
         var catURL = catJSON[0]["url"];
         var catWidth = catJSON[0]["width"];
@@ -68,7 +67,7 @@ app.get('/dog', function(req,res){
         method: 'GET',
         url: 'https://api.thedogapi.com/v1/images/search?mime_types=png',
         headers: {
-            'x-api-key': 'f513c45f-7ac7-492f-b047-5a89438c0563'
+            'x-api-key': dbconfig["api-key"]
         }
     };
 
@@ -88,9 +87,9 @@ app.get('/dog', function(req,res){
         console.log(dogJSON[0]["breeds"]);
         res.status(200);
 
-        res.send("<img src='"+catURL+"'>"
-            +"<br> <h4> Width: " + catWidth + "</h4>" + 
-            "<h4> Height " + catHeight + "</h4>"
+        res.send("<img src='"+dogURL+"'>"
+            +"<br> <h4> Width: " + dogWidth + "</h4>" + 
+            "<h4> Height " + dogHeight + "</h4>"
         
         );
 
@@ -141,7 +140,7 @@ app.get('/*', function(req,res){
     console.log(res.statusCode); 
     }else{
 
-        filePath = absPath + '404.html';
+        filePath = absPath + '/404.html';
         res.status(404);
         res.sendFile(filePath);
         console.log(res.statusCode); 
